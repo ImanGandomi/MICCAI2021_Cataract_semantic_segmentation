@@ -63,4 +63,4 @@ if __name__ == '__main__':
     if config['mode'] == 'training':
         manager.train()
     elif config['mode'] == 'inference':
-        manager.infer()
+        manager.infer())
