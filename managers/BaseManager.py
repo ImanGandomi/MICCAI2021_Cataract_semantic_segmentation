@@ -191,7 +191,9 @@ class BaseManager:
         # Create default dataloaders
         if self.config['mode'] == 'inference':
             train_df, valid_df = self.get_seg_dataframes()
+            print("train_df: ", train_df, "valid_df: ", valid_df)
             _, valid_loader = self.get_dataloaders(train_df, valid_df, 'default')
+            print("valid_loader: ", valid_loader)
             self.data_loaders = {'valid_loader': valid_loader}
             return
 
