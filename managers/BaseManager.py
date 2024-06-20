@@ -2,6 +2,7 @@ import pathlib
 import cv2
 import json
 import torch
+import pickle
 import datetime
 import numpy as np
 import pandas as pd
@@ -668,6 +669,11 @@ class BaseManager:
                 img, lbl = img.to(self.device), lbl.to(self.device)
                 # noinspection PyUnboundLocalVariable
                 output = self.model(img.float()) if not self.config['tta'] else tta_model(img.float())
+                print("type of output :", type(output))
+                print("type of output :", output.shape)
+                with open('output.pkl', 'wb') as h:
+                    pickle.dump(output.cpu(), h)
+
                 confusion_matrix = t_get_confusion_matrix(output, lbl, confusion_matrix)
                 if rec_num in np.round(np.linspace(0, len(self.data_loaders['valid_loader']) - 1, self.max_valid_imgs)):
                     if not isinstance(self.model, Ensemble):
