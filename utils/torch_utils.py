@@ -234,6 +234,10 @@ def t_get_confusion_matrix(prediction: torch.Tensor, target: torch.Tensor, exist
             one_hot_target = one_hot_target[:, :-1]
         else:
             one_hot_target = one_hot(t, num_classes)
+        print("one_hot_pred: ",one_hot_pred.shape)
+        print("one_hot_target: ", one_hot_target.shape)
+
+
         confusion_matrix = torch.matmul(one_hot_pred.to(torch.float), one_hot_target.to(torch.float)).to(torch.int)
         # [C, N*H*W] x [N*H*W, C] = [C, C]
         if existing_matrix is not None:
