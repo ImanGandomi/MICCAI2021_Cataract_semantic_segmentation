@@ -1,6 +1,8 @@
 import torch
 from torch.nn import Conv2d, ConvTranspose2d, ReLU, Sequential, BatchNorm2d
 from torch.nn.functional import one_hot, unfold, pad
+import numpy as np
+import matplotlib.pyplot as plt
 from utils import softmax, get_inverse_affine_matrix, rotate, InterpolationMode, CLASS_INFO, DEFAULT_VALUES
 
 
@@ -237,9 +239,16 @@ def t_get_confusion_matrix(prediction: torch.Tensor, target: torch.Tensor, exist
         print("one_hot_pred: ",one_hot_pred.shape)
         print("one_hot_target: ", one_hot_target.shape)
 
+        print(type(one_hot_pred))
+
 
         confusion_matrix = torch.matmul(one_hot_pred.to(torch.float), one_hot_target.to(torch.float)).to(torch.int)
         # [C, N*H*W] x [N*H*W, C] = [C, C]
+        # one_hot_encoded = one_hot_pred
+        # original_shape = (960, 540, 8)
+        # one_hot_encoded = one_hot_encoded.reshape(original_shape)
+
+
         if existing_matrix is not None:
             confusion_matrix += existing_matrix
         return confusion_matrix
