@@ -1,6 +1,7 @@
 import torch
 from torch.nn import Conv2d, ConvTranspose2d, ReLU, Sequential, BatchNorm2d
 from torch.nn.functional import one_hot, unfold, pad
+import pickle
 import numpy as np
 import matplotlib.pyplot as plt
 from utils import softmax, get_inverse_affine_matrix, rotate, InterpolationMode, CLASS_INFO, DEFAULT_VALUES
@@ -244,16 +245,20 @@ def t_get_confusion_matrix(prediction: torch.Tensor, target: torch.Tensor, exist
 
         confusion_matrix = torch.matmul(one_hot_pred.to(torch.float), one_hot_target.to(torch.float)).to(torch.int)
         # [C, N*H*W] x [N*H*W, C] = [C, C]
-        one_hot_encoded = one_hot_pred
-        one_hot_encoded_np = one_hot_encoded.numpy()
-        original_shape = (960, 540, 8)
-        one_hot_encoded_np = one_hot_encoded_np.reshape(original_shape)
-        segmentation_mask = np.argmax(one_hot_encoded_np, axis=-1)
-        # Display the segmentation mask using matplotlib
-        plt.imshow(segmentation_mask, cmap='tab20')  # 'tab20' provides a colormap with 20 distinct colors
-        plt.colorbar()
-        plt.title("Segmentation Mask")
-        plt.show()
+
+        with open('one_hot_pred.pkl', 'wb') as f:
+            pickle.dump(one_hot_pred.cpu(), f)
+
+        # one_hot_encoded = one_hot_pred
+        # one_hot_encoded_np = one_hot_encoded.cpu().numpy()
+        # original_shape = (960, 540, 8)
+        # one_hot_encoded_np = one_hot_encoded_np.reshape(original_shape)
+        # segmentation_mask = np.argmax(one_hot_encoded_np, axis=-1)
+        # # Display the segmentation mask using matplotlib
+        # plt.imshow(segmentation_mask, cmap='tab20')  # 'tab20' provides a colormap with 20 distinct colors
+        # plt.colorbar()
+        # plt.title("Segmentation Mask")
+        # plt.show()
 
 
         if existing_matrix is not None:
