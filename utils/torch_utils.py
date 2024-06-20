@@ -244,9 +244,15 @@ def t_get_confusion_matrix(prediction: torch.Tensor, target: torch.Tensor, exist
 
         confusion_matrix = torch.matmul(one_hot_pred.to(torch.float), one_hot_target.to(torch.float)).to(torch.int)
         # [C, N*H*W] x [N*H*W, C] = [C, C]
-        # one_hot_encoded = one_hot_pred
-        # original_shape = (960, 540, 8)
-        # one_hot_encoded = one_hot_encoded.reshape(original_shape)
+        one_hot_encoded = one_hot_pred
+        original_shape = (960, 540, 8)
+        one_hot_encoded = one_hot_encoded.reshape(original_shape)
+        segmentation_mask = np.argmax(one_hot_encoded_np, axis=-1)
+        # Display the segmentation mask using matplotlib
+        plt.imshow(segmentation_mask, cmap='tab20')  # 'tab20' provides a colormap with 20 distinct colors
+        plt.colorbar()
+        plt.title("Segmentation Mask")
+        plt.show()
 
 
         if existing_matrix is not None:
