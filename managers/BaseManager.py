@@ -664,6 +664,7 @@ class BaseManager:
 
         confusion_matrix = None
         with torch.no_grad():
+            variables_list = []
             for rec_num, (img, lbl, metadata) in enumerate(self.data_loaders['valid_loader']):
                 print("\r Inference on {}".format(rec_num), end='', flush=True)
                 img, lbl = img.to(self.device), lbl.to(self.device)
@@ -671,8 +672,9 @@ class BaseManager:
                 output = self.model(img.float()) if not self.config['tta'] else tta_model(img.float())
                 print("type of output :", type(output))
                 print("type of output :", output.shape)
+                variables_list.append(output.cpu())
                 with open('output.pkl', 'wb') as h:
-                    pickle.dump(output.cpu(), h)
+                    pickle.dump(variables_list, h)
 
                 confusion_matrix = t_get_confusion_matrix(output, lbl, confusion_matrix)
                 if rec_num in np.round(np.linspace(0, len(self.data_loaders['valid_loader']) - 1, self.max_valid_imgs)):
